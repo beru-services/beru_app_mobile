@@ -1,3 +1,4 @@
+import 'package:beru_app/AssignedRequests/ui/screens/list_assigned_requests_screen.dart';
 import 'package:beru_app/Widgets/button.dart';
 import 'package:beru_app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,7 @@ class _FormLogin extends State<FormLogin> {
           child: const Text("Forgot Password?",
               textAlign: TextAlign.end,
               style: TextStyle(
-                fontSize: 18,
+                  fontSize: 18,
                   color: AppColors.black, fontFamily: AppFonts.fontMedium)),
         ));
   }
@@ -93,8 +94,13 @@ class _FormLogin extends State<FormLogin> {
     return Button(
       padding: const EdgeInsets.symmetric(vertical: 20),
       label: "LOGIN",
-      onTab: () => {
-        if (form.valid) {print(form.value)} else {form.markAllAsTouched()}
+      onTab: () {
+        if (form.valid) {
+          print(form.value);
+          Navigator.pushNamed(context, '/list');
+        } else {
+          form.markAllAsTouched();
+        }
       },
     );
   }

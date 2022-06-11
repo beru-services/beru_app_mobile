@@ -62,12 +62,16 @@ flutter_icons:
 
 flutter:
 
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
   uses-material-design: true
 
   assets:
     - images/bg.png
     - images/image.png
     - images/logo.png
+    - images/logout.png
 
 
   fonts:
@@ -80,3 +84,5 @@ flutter:
     - family: FontRegular
       fonts:
         - asset: fonts/Roboto-Regular.ttf
+
+

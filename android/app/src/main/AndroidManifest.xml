@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="beruservice.jaspesoft.com">
+    package="com.beruservice.beru_app">
    <application
         android:label="beru_app"
         android:name="${applicationName}"
