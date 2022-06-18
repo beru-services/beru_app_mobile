@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import '../../service_order_model.dart';
 
 class CardItem extends StatelessWidget {
-  final String client;
-  final StatusServiceOrder status;
+  final ServiceOrderModel serviceOrder;
 
-  const CardItem({Key? key, required this.client, required this.status})
+  const CardItem({Key? key, required this.serviceOrder})
       : super(key: key);
 
   @override
@@ -47,8 +46,8 @@ class CardItem extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10)),
-                    color: _colorStatusOrder(status)),
-                child: _iconStatusOrder(status),
+                    color: _colorStatusOrder(serviceOrder.status)),
+                child: _iconStatusOrder(serviceOrder.status),
               )),
           const Expanded(flex: 0, child: Text('')),
           Expanded(
@@ -68,7 +67,7 @@ class CardItem extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10, left: 10),
                     child: Text(
-                      client,
+                      serviceOrder.client?.toJson()["name"],
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         color: Colors.black,
@@ -101,7 +100,7 @@ class CardItem extends StatelessWidget {
     );
   }
 
-  Icon _iconStatusOrder(StatusServiceOrder status) {
+  Icon _iconStatusOrder(StatusServiceOrder? status) {
     if (status == StatusServiceOrder.A) {
       return const Icon(Icons.info_rounded, color: Colors.white, size: 24.0);
     } else if (status == StatusServiceOrder.S ) {
@@ -125,7 +124,7 @@ class CardItem extends StatelessWidget {
     );
   }
 
-  _colorStatusOrder(StatusServiceOrder status) {
+  _colorStatusOrder(StatusServiceOrder? status) {
     if (status == StatusServiceOrder.A) {
       return AppColors.yellow;
     } else if (status == StatusServiceOrder.S) {

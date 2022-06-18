@@ -1,8 +1,10 @@
-import 'package:beru_app/AssignedRequests/ui/screens/list_assigned_requests_screen.dart';
+import 'package:beru_app/Auth/auth_repository.dart';
 import 'package:beru_app/Widgets/button.dart';
+import 'package:beru_app/Widgets/loading.dart';
 import 'package:beru_app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:toast/toast.dart';
 
 import '../../../Widgets/custom_input.dart';
 import '../../../utils/app_fonts.dart';
@@ -16,16 +18,27 @@ class FormLogin extends StatefulWidget {
 }
 
 class _FormLogin extends State<FormLogin> {
+  bool _makeRequest = false;
+  AuthRepository repository = AuthRepository();
+
   FormGroup buildForm() =>
       fb.group(<String, Object>{
         'email': FormControl<String>(
           validators: [Validators.required, Validators.email],
         ),
         'password': ['', Validators.required, Validators.minLength(8)],
+        'user_type': ['D'],
       });
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
+
     return Container(
         color: Colors.white,
         child: Padding(
@@ -64,7 +77,7 @@ class _FormLogin extends State<FormLogin> {
                   ),
                   const SizedBox(height: 10.0),
                   _forgotPassword(),
-                  _buttonLogin(form)
+                  (_makeRequest) ? Loading() : _buttonLogin(form)
                 ],
               );
             },
@@ -94,14 +107,36 @@ class _FormLogin extends State<FormLogin> {
     return Button(
       padding: const EdgeInsets.symmetric(vertical: 20),
       label: "LOGIN",
-      onTab: () {
-        if (form.valid) {
-          print(form.value);
-          Navigator.pushNamed(context, '/list');
-        } else {
+      onTab: () async {
+        if (!form.valid) {
           form.markAllAsTouched();
+          return;
         }
+        updateState(true);
+
+        try {
+          if (await repository.makeLogin(form.value)) {
+            Navigator.pushNamed(context, "/list");
+          }
+
+          showToast("Welcome", duration: 5);
+
+        } catch(e) {
+          showToast(e.toString(), duration: 5);
+        }
+
+        updateState(false);
       },
     );
+  }
+
+  void updateState(bool state) {
+    setState(() {
+      _makeRequest = state;
+    });
+  }
+
+  void showToast(String msg, {int? duration}) {
+    Toast.show(msg, duration: duration, gravity: Toast.bottom);
   }
 }

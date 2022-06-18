@@ -6,17 +6,17 @@ enum StatusServiceOrder {
   D,
 }
 
-class ServiceOrder {
+class ServiceOrderModel {
   String? createdAt;
   Client? client;
   StatusServiceOrder? status;
   String? statusDescription;
   List<ServiceOrderDetail>? serviceOrderDetail;
 
-  ServiceOrder(
+  ServiceOrderModel(
       {this.createdAt, this.client, this.status, this.statusDescription, this.serviceOrderDetail});
 
-  ServiceOrder.fromJson(Map<String, dynamic> json) {
+  ServiceOrderModel.fromJson(Map<String, dynamic> json) {
     createdAt = json['created_at'];
     client = json['client'] != null ? Client.fromJson(json['client']) : null;
     status = json['status'];

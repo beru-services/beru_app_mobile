@@ -9,9 +9,17 @@ class AppSession extends DatabaseHelper implements DataBaseInterface {
   static late ModelSession user;
 
   Future register(ModelSession data) async {
-    await deleteObject();
-    await saveObject();
-    user = data;
+    print("rrrrr");
+    try {
+      user = data;
+      await deleteObject();
+      await saveObject();
+
+    } catch (e) {
+      print(e);
+      print("==== ERROR ===");
+      // await _createTable();
+    }
   }
 
   Future unregister() async {
@@ -22,41 +30,45 @@ class AppSession extends DatabaseHelper implements DataBaseInterface {
   }
 
   Future<bool> isActiveSession() async {
-    var dataUser = await getObject(1);
-    if (dataUser == null) {
-      AppSession.isLoggedIn = false;
-      return false;
-    } else {
-      AppSession.isLoggedIn = true;
-      return true;
+    try {
+      print('object');
+      user = await getObject(1);
+      print(user);
+      print("aaaaa");
+      if (user.userId is int) {
+        AppSession.isLoggedIn = true;
+        return true;
+      }
+    } catch (e) {
+      print('===== new phone ===');
+      await _createTable();
     }
+
+
+    AppSession.isLoggedIn = false;
+    return false;
   }
+
   Future deleteObject() async {
     final db = await database;
-
+    print("delete");
     await db.delete('user');
   }
 
   @override
   Future getObject(int id) async {
     Database db = await database;
-    try {
-      List<Map> maps = await db.query('user',
-          columns: ['*'], where: "id = ?", whereArgs: [id]);
-      if (!maps.isNotEmpty) {
-        return null;
-      }
 
-      AppSession.isLoggedIn = true;
-      var data = json.decode(json.encode(maps.first));
-
-      return ModelSession().fromJson(data);
-
-    } catch (e) {
-      print("==== Es un nuevo celular ===");
-      await _createTable();
+    List<Map> maps = await db.query('user',
+        columns: ['*'], where: "id = ?", whereArgs: [id]);
+    if (!maps.isNotEmpty) {
       return null;
     }
+
+    AppSession.isLoggedIn = true;
+    var data = json.decode(json.encode(maps.first));
+
+    return ModelSession.fromJson(data);
   }
 
   @override
@@ -70,23 +82,23 @@ class AppSession extends DatabaseHelper implements DataBaseInterface {
     Database db = await database;
     db.execute("DROP TABLE IF EXISTS user;");
     db.execute(
-      "CREATE TABLE cliente(id INTEGER PRIMARY KEY, "
-          "token TEXT,"
-          "user_type TEXT,"
-          "user_id INTEGER)",
+      "CREATE TABLE user(id INTEGER PRIMARY KEY, "
+      "token TEXT,"
+      "user_type TEXT,"
+      "user_id INTEGER)",
     );
     return true;
   }
-
 }
 
-
 class ModelSession {
-  late String token;
-  late String userType;
-  late int userId;
+  String? token;
+  String? userType;
+  int? userId;
 
-  fromJson(Map<String, dynamic> json) {
+  ModelSession({this.token, this.userType, this.userId});
+
+  ModelSession.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     userType = json['user_type'];
     userId = json['user_id'];
@@ -97,7 +109,6 @@ class ModelSession {
     data['token'] = token;
     data['user_type'] = userType;
     data['user_id'] = userId;
-
     return data;
   }
 }
