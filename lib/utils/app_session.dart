@@ -31,10 +31,8 @@ class AppSession extends DatabaseHelper implements DataBaseInterface {
 
   Future<bool> isActiveSession() async {
     try {
-      print('object');
       user = await getObject(1);
-      print(user);
-      print("aaaaa");
+
       if (user.userId is int) {
         AppSession.isLoggedIn = true;
         return true;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_fonts.dart';
+import '../../../utils/app_session.dart';
 
 class BackgroundAssignedRequest extends StatelessWidget {
   final String title;
@@ -20,13 +22,16 @@ class BackgroundAssignedRequest extends StatelessWidget {
           Padding(
             padding:
                 const EdgeInsets.only(top: 0, left: 10, right: 10, bottom: 0),
-            child: Row(
-              children: [
-                _logo(),
-                const Expanded(flex: 1, child: Text('')),
-                _logout(),
-                _titleLogOut()
-              ],
+            child: GestureDetector(
+              onTap: () => _openDialogClosedApp(context),
+              child: Row(
+                children: [
+                  _logo(),
+                  const Expanded(flex: 1, child: Text('')),
+                  _logout(),
+                  _titleLogOut()
+                ],
+              ),
             ),
           ),
           _title()
@@ -66,6 +71,32 @@ class BackgroundAssignedRequest extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _openDialogClosedApp(ctx) {
+    showCupertinoDialog(
+        context: ctx,
+        builder: (_) => CupertinoAlertDialog(
+              title: const Text('Sign off'),
+              content: const Text('Do you wish to continue?'),
+              actions: [
+                // Close the dialog
+                // You can use the CupertinoDialogAction widget instead
+                CupertinoButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    }),
+                CupertinoButton(
+                  child: const Text('I agree'),
+                  onPressed: () {
+                    AppSession()
+                        .unregister()
+                        .then((value) => Navigator.pushNamed(ctx, '/'));
+                  },
+                )
+              ],
+            ));
   }
 
   Widget _logo() {

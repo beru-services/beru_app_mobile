@@ -9,31 +9,14 @@ abstract class AppHttp {
   late String api;
 
   getHeader() async {
-    print("========= aaaahhhhh");
-    print(AppSession.user);
-    print("========= xxxxxxx");
-   return {
-     HttpHeaders.authorizationHeader:
-     "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}"
-   };
+    return {
+      HttpHeaders.authorizationHeader:
+          "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}"
+    };
   }
 
-  // Future<Map<String, dynamic>> header() async {
-  //   AppSession session = AppSession();
-  //   if (await session.isActiveSession()) {
-  //     return {
-  //       HttpHeaders.authorizationHeader:
-  //       "Token ${(session.user != null) ? AppSession().user.token : ''}"
-  //     };
-  //   }
-  //
-  //   return {};
-  //
-  // }
-
-  static Future<String> getUurlAapi({String apiVersion = 'v1'}) async {
+  static Future<String> getUrlApi({String apiVersion = 'v1'}) async {
     await dotenv.load(fileName: ".env");
     return '${dotenv.env['API_SERVER']}$apiVersion/';
   }
-
 }

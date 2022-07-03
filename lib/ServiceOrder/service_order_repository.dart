@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:beru_app/ServiceOrder/service_order_model.dart';
 import 'package:beru_app/utils/app_http.dart';
 import 'package:dio/dio.dart';
@@ -9,7 +11,7 @@ class ServiceOrderRepository extends AppHttp {
       var header = await getHeader();
 
       response = await http.get(
-          "${await AppHttp.getUurlAapi()}process/driver/service-order/",
+          "${await AppHttp.getUrlApi()}process/driver/service-order/",
           options: Options(headers: header)
       );
 
@@ -18,11 +20,12 @@ class ServiceOrderRepository extends AppHttp {
       return parsed.map<ServiceOrderModel>((json) => ServiceOrderModel.fromJson(json)).toList();
 
     } on DioError catch (e) {
-      print('errr');
-      Map error = e.response!.data;
-      error.forEach((key, value) => throw (value));
-      print(e);
-      return [] as ServiceOrderModel;
+      Map error = jsonDecode(jsonEncode(e.response?.data));
+      error.forEach((key, value) {
+        throw (value);
+      });
+
+      return {} as ServiceOrderModel;
     }
   }
 }

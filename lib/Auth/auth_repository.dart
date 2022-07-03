@@ -10,8 +10,8 @@ class AuthRepository extends AppHttp {
     Response resp;
     try {
       FormData formData = FormData.fromMap(dataLogin);
-      var url = "${await AppHttp.getUurlAapi()}backend/auth/";
-      print(url);
+      var url = "${await AppHttp.getUrlApi()}backend/auth/";
+
       resp = await http.post(
           url,
           data: formData
@@ -29,8 +29,6 @@ class AuthRepository extends AppHttp {
 
       Map error = jsonDecode(jsonEncode(e.response?.data));
       error.forEach((key, value) {
-        print(value);
-        print("==========");
         throw (value);
       });
     }
