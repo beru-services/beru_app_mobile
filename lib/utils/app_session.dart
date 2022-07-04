@@ -9,15 +9,12 @@ class AppSession extends DatabaseHelper implements DataBaseInterface {
   static late ModelSession user;
 
   Future register(ModelSession data) async {
-    print("rrrrr");
     try {
       user = data;
       await deleteObject();
       await saveObject();
 
     } catch (e) {
-      print(e);
-      print("==== ERROR ===");
       // await _createTable();
     }
   }

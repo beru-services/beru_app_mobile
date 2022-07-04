@@ -17,15 +17,35 @@ class ServiceOrderModel {
       {this.createdAt, this.client, this.status, this.statusDescription, this.serviceOrderDetail});
 
   ServiceOrderModel.fromJson(Map<String, dynamic> json) {
+
     createdAt = json['created_at'];
     client = json['client'] != null ? Client.fromJson(json['client']) : null;
-    status = json['status'];
+
+    status = _mapToStatus(json['status']);
+
     statusDescription = json['get_status_display'];
+
     if (json['fk_service_order'] != null) {
       serviceOrderDetail = <ServiceOrderDetail>[];
       json['fk_service_order'].forEach((v) {
         serviceOrderDetail!.add(ServiceOrderDetail.fromJson(v));
       });
+    }
+  }
+
+  StatusServiceOrder _mapToStatus(String status) {
+    switch(status) {
+      case "A":
+        return StatusServiceOrder.A;
+      case "U":
+        return StatusServiceOrder.U;
+      case "S":
+        return StatusServiceOrder.S;
+      case "T":
+        return StatusServiceOrder.T;
+      default:
+        return StatusServiceOrder.D;
+
     }
   }
 
@@ -87,7 +107,7 @@ class Client {
 }
 
 class ServiceOrderDetail {
-  int? article;
+  String? article;
   int? quantity;
 
   ServiceOrderDetail({this.article, this.quantity});

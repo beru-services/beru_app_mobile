@@ -1,6 +1,7 @@
 import 'package:beru_app/ServiceOrder/service_order_repository.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/background_assigned_request.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/card_item.dart';
+import 'package:beru_app/utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Widgets/loading.dart';
@@ -29,32 +30,43 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
                   title: "LIST OF ASSIGNED REQUESTS"),
             ),
             Container(
-              height: 480,
-              padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                // child:_listItems(),
-                child: FutureBuilder(
-                  future: repository.getServiceOrder(),
-                  builder: (context, snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.done &&
-                    //     snapshot.data != null) {
-                    //
-                    // }
-                    return Loading();
-                  }
-                ),
-              )
-            )
+                height: 480,
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  // child:_listItems(),
+                  child: FutureBuilder(
+                      future: repository.getServiceOrder(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return Loading();
+                        }
+
+                        if (snapshot.data == null) {
+                          return _notData();
+                        }
+
+                        List<ServiceOrderModel> listOrders =
+                            snapshot.data as List<ServiceOrderModel>;
+
+                        return Column(
+                          children: listOrders
+                              .map((order) => CardItem(serviceOrder: order))
+                              .toList(),
+                        );
+                      }),
+                ))
           ],
         ));
   }
 
-  Widget _listItems() {
-    return Column(children: const [
-      // CardItem(client: 'Titulo', status: StatusServiceOrder.D,),
-      // CardItem(client: 'Cliente uno', status: StatusServiceOrder.S,),
-      // CardItem(client: 'Titulo', status: StatusServiceOrder.T,),
-      // CardItem(client: 'ANGEL BEJARANO', status: StatusServiceOrder.A,),
-    ]);
+  Widget _notData() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 60),
+      child: Text(
+        'Has no orders assigned',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 16, fontFamily: AppFonts.fontMedium),
+      ),
+    );
   }
 }

@@ -5,27 +5,30 @@ import 'package:beru_app/utils/app_http.dart';
 import 'package:dio/dio.dart';
 
 class ServiceOrderRepository extends AppHttp {
-  Future<ServiceOrderModel> getServiceOrder() async {
+  Future<List<ServiceOrderModel>> getServiceOrder() async {
     Response response;
     try {
       var header = await getHeader();
 
       response = await http.get(
           "${await AppHttp.getUrlApi()}process/driver/service-order/",
-          options: Options(headers: header)
-      );
+          options: Options(headers: header));
 
       final parsed = response.data['results'].cast<Map<String, dynamic>>();
+      var data = parsed
+          .map<ServiceOrderModel>((json) => ServiceOrderModel.fromJson(json))
+          .toList();
 
-      return parsed.map<ServiceOrderModel>((json) => ServiceOrderModel.fromJson(json)).toList();
-
+      return data;
     } on DioError catch (e) {
+      print("errroorrr");
       Map error = jsonDecode(jsonEncode(e.response?.data));
       error.forEach((key, value) {
+        print(value);
         throw (value);
       });
-
-      return {} as ServiceOrderModel;
     }
+
+    return [];
   }
 }

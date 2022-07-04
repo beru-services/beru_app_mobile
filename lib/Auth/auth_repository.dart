@@ -7,6 +7,7 @@ import '../utils/app_session.dart';
 
 class AuthRepository extends AppHttp {
   Future<bool> makeLogin(Map<String, dynamic> dataLogin) async {
+
     Response resp;
     try {
       FormData formData = FormData.fromMap(dataLogin);
@@ -14,7 +15,7 @@ class AuthRepository extends AppHttp {
 
       resp = await http.post(
           url,
-          data: formData
+          data: formData,
       );
 
       ModelSession modelSession = ModelSession.fromJson(resp.data);
@@ -26,8 +27,9 @@ class AuthRepository extends AppHttp {
       }
 
     } on DioError catch (e) {
-
+      print(e.response?.data);
       Map error = jsonDecode(jsonEncode(e.response?.data));
+
       error.forEach((key, value) {
         throw (value);
       });
