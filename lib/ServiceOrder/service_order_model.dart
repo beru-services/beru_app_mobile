@@ -7,6 +7,7 @@ enum StatusServiceOrder {
 }
 
 class ServiceOrderModel {
+  int? id;
   String? createdAt;
   Client? client;
   StatusServiceOrder? status;
@@ -14,12 +15,27 @@ class ServiceOrderModel {
   List<ServiceOrderDetail>? serviceOrderDetail;
 
   ServiceOrderModel(
-      {this.createdAt, this.client, this.status, this.statusDescription, this.serviceOrderDetail});
+      {this.createdAt,
+      this.client,
+      this.status,
+      this.statusDescription,
+      this.serviceOrderDetail,
+      this.id});
 
   ServiceOrderModel.fromJson(Map<String, dynamic> json) {
-
+    id = json['id'];
     createdAt = json['created_at'];
-    client = json['client'] != null ? Client.fromJson(json['client']) : null;
+    var client_json = json['client'];
+
+    client = Client(
+        client_json['id'],
+        client_json['name'].toString(),
+        client_json['address'].toString(),
+        client_json['email'].toString(),
+        client_json['lon'].toString(),
+        client_json['lat'].toString(),
+        client_json['active'].toString()
+    );
 
     status = _mapToStatus(json['status']);
 
@@ -34,7 +50,7 @@ class ServiceOrderModel {
   }
 
   StatusServiceOrder _mapToStatus(String status) {
-    switch(status) {
+    switch (status) {
       case "A":
         return StatusServiceOrder.A;
       case "U":
@@ -45,12 +61,35 @@ class ServiceOrderModel {
         return StatusServiceOrder.T;
       default:
         return StatusServiceOrder.D;
-
     }
+  }
+
+  static String statusObjectToString(StatusServiceOrder status) {
+    String statusString = 'A';
+    switch (status) {
+      case StatusServiceOrder.A:
+        statusString = 'A';
+        break;
+      case StatusServiceOrder.T:
+        statusString = 'T';
+        break;
+      case StatusServiceOrder.U:
+        statusString = 'U';
+        break;
+      case StatusServiceOrder.S:
+        statusString = 'S';
+        break;
+      case StatusServiceOrder.D:
+        statusString = 'D';
+        break;
+    }
+
+    return statusString;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['created_at'] = createdAt;
     if (client != null) {
       data['client'] = client!.toJson();
@@ -66,32 +105,25 @@ class ServiceOrderModel {
 }
 
 class Client {
-  int? id;
-  String? name;
-  String? address;
-  String? email;
-  String? lon;
-  String? lat;
-  bool? active;
+  final int id;
+  final String name;
+  final String address;
+  final String email;
+  final String lon;
+  final String lat;
+  final String active;
 
-  Client(
-      {this.id,
-      this.name,
-      this.address,
-      this.email,
-      this.lon,
-      this.lat,
-      this.active});
+  Client(this.id, this.name, this.address, this.email, this.lon, this.lat, this.active);
 
-  Client.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    address = json['address'];
-    email = json['email'];
-    lon = json['lon'];
-    lat = json['lat'];
-    active = json['active'];
-  }
+  // Client.fromJson(Map<String, dynamic> json) {
+  //   id = json['id'];
+  //   name = json['name'];
+  //   address = json['address'];
+  //   email = json['email'];
+  //   lon = json['lon'];
+  //   lat = json['lat'];
+  //   active = json['active'];
+  // }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};

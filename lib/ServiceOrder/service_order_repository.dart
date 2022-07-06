@@ -9,26 +9,41 @@ class ServiceOrderRepository extends AppHttp {
     Response response;
     try {
       var header = await getHeader();
+      var url = "${await AppHttp.getUrlApi()}process/driver/service-order/";
 
       response = await http.get(
-          "${await AppHttp.getUrlApi()}process/driver/service-order/",
+          url,
           options: Options(headers: header));
 
       final parsed = response.data['results'].cast<Map<String, dynamic>>();
-      var data = parsed
+
+      return parsed
           .map<ServiceOrderModel>((json) => ServiceOrderModel.fromJson(json))
           .toList();
-
-      return data;
     } on DioError catch (e) {
-      print("errroorrr");
       Map error = jsonDecode(jsonEncode(e.response?.data));
       error.forEach((key, value) {
-        print(value);
+        throw (value);
+      });
+      return [];
+    }
+  }
+
+  Future<void> setUpdateStatus(int? orderId, String status) async {
+    try {
+      var header = await getHeader();
+      FormData formData = FormData.fromMap({'id': orderId, 'status': status});
+
+      await http.post(
+          "${await AppHttp.getUrlApi()}process/update/service-order/",
+          data: formData,
+          options: Options(headers: header));
+
+    } on DioError catch (e) {
+      Map error = jsonDecode(jsonEncode(e.response?.data));
+      error.forEach((key, value) {
         throw (value);
       });
     }
-
-    return [];
   }
 }

@@ -1,4 +1,5 @@
 import 'package:beru_app/ServiceOrder/service_order_repository.dart';
+import 'package:beru_app/ServiceOrder/ui/screens/detail_service_order_screen.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/background_assigned_request.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/card_item.dart';
 import 'package:beru_app/utils/app_fonts.dart';
@@ -41,18 +42,29 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
                           return Loading();
                         }
 
-                        if (snapshot.data == null) {
-                          return _notData();
+                        if (snapshot.data != null) {
+                          List<ServiceOrderModel> listOrders =
+                              snapshot.data as List<ServiceOrderModel>;
+
+                          if (listOrders.isNotEmpty) {
+                            return Column(
+                              children: listOrders.map((order) {
+                                return GestureDetector(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailServiceOrderScreen(
+                                                serviceOrder: order,
+                                              ))),
+                                  child: CardItem(serviceOrder: order),
+                                );
+                              }).toList(),
+                            );
+                          }
                         }
 
-                        List<ServiceOrderModel> listOrders =
-                            snapshot.data as List<ServiceOrderModel>;
-
-                        return Column(
-                          children: listOrders
-                              .map((order) => CardItem(serviceOrder: order))
-                              .toList(),
-                        );
+                        return _notData();
                       }),
                 ))
           ],

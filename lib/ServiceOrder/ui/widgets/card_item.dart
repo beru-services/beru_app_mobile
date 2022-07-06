@@ -19,16 +19,16 @@ class CardItem extends StatelessWidget {
             color: AppColors.lightGrey,
             offset: Offset(
               0.0,
-              4.0,
+              2.0,
             ),
             blurRadius: 3.0,
             spreadRadius: 0,
           ),
           BoxShadow(
             color: Colors.white,
-            offset: Offset(2, 0),
-            blurRadius: 4,
-            spreadRadius: 0.0,
+            offset: Offset(1, 0),
+            blurRadius: 2,
+            spreadRadius: 1.0,
           ),
         ],
         borderRadius: BorderRadius.only(

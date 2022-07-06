@@ -9,6 +9,8 @@ abstract class AppHttp {
   late String api;
 
   getHeader() async {
+    var token = "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}";
+    print(token);
     return {
       HttpHeaders.authorizationHeader:
           "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}"

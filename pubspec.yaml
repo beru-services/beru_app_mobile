@@ -40,6 +40,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   sqflite: ^2.0.2+1
   toast: ^0.3.0
+  map_launcher: ^2.2.3
+  flutter_svg: ^1.1.1+1
 
 dev_dependencies:
   flutter_test:
