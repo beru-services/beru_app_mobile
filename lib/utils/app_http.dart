@@ -21,4 +21,9 @@ abstract class AppHttp {
     await dotenv.load(fileName: ".env");
     return '${dotenv.env['API_SERVER']}$apiVersion/';
   }
+
+  static getTokenOneSignal() async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['ONE_SIGNAL'].toString();
+  }
 }
