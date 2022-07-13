@@ -39,17 +39,40 @@ class AuthRepository extends AppHttp {
 
   }
 
-  // Future retrievePassword(Map<String, dynamic> data) async {
-  //   Response resp;
-  //   try {
-  //     FormData formData = new FormData.fromMap(data);
-  //     resp = await http.post(await AppHttp.getUurlAapi() + 'config/restaurar-clave/', data: formData);
-  //   } on DioError catch (e) {
-  //     Map error = jsonDecode(jsonEncode(e.response.data));
-  //     error.forEach((key, value) {
-  //       throw (value);
-  //     });
-  //   }
-  //   return resp.data;
-  // }
+  Future<bool> recoveryPassword(Map<String, dynamic> data) async {
+    try {
+      FormData formData = FormData.fromMap(data);
+      var url = "${await AppHttp.getUrlApi()}backend/reset-password/";
+      await http.post(url, data: formData);
+      return true;
+    } on DioError catch (e) {
+      Map error = jsonDecode(jsonEncode(e.response?.data));
+
+      error.forEach((key, value) {
+        throw (value);
+      });
+    }
+
+    return false;
+  }
+
+  Future<bool> changePassword(Map<String, dynamic> data) async {
+    try {
+      print(data);
+      FormData formData = FormData.fromMap(data);
+      var url = "${await AppHttp.getUrlApi()}backend/change-password/";
+      print(url);
+      await http.post(url, data: formData);
+      return true;
+    } on DioError catch (e) {
+      print('eerrr');
+      Map error = jsonDecode(jsonEncode(e.response?.data));
+print(error);
+      error.forEach((key, value) {
+        throw (value);
+      });
+    }
+
+    return false;
+  }
 }

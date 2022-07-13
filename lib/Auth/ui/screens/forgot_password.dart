@@ -13,6 +13,8 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPassword extends State<ForgotPassword> {
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: AppColors.black, toolbarHeight: 0),
@@ -43,7 +45,7 @@ class _ForgotPassword extends State<ForgotPassword> {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(false),
       child: const Text(
-        "Join the Application",
+        "Back to login",
         style:
             TextStyle(fontFamily: AppFonts.fontLight, color: AppColors.black),
       ),

@@ -49,7 +49,6 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
   }
 
   void _handlePromptForPushPermission() {
-    print("Prompting for Permission XXXX");
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
       print("Accepted permission: $accepted");
     });

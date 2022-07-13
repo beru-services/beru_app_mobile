@@ -1,8 +1,10 @@
+import 'package:beru_app/Auth/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../Widgets/button.dart';
 import '../../../Widgets/custom_input.dart';
+import '../screens/change_password_screen.dart';
 
 class FormForgotPassword extends StatefulWidget {
   const FormForgotPassword({Key? key}) : super(key: key);
@@ -12,11 +14,19 @@ class FormForgotPassword extends StatefulWidget {
 }
 
 class _FormForgotPassword extends State<FormForgotPassword> {
+  AuthRepository authRepository = AuthRepository();
+  bool _makeRequest = false;
+
   FormGroup buildForm() => fb.group(<String, Object>{
         'email': FormControl<String>(
           validators: [Validators.required, Validators.email],
         ),
       });
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +57,28 @@ class _FormForgotPassword extends State<FormForgotPassword> {
     return Button(
       padding: const EdgeInsets.symmetric(vertical: 20),
       label: "SEND",
-      onTab: () => {
-        if (form.valid) {print(form.value)} else {form.markAllAsTouched()}
+      onTab: () async {
+        if (form.valid) {
+          updateState(true);
+          if (await authRepository.recoveryPassword(form.value)) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChangePasswordScreen(
+                        email: form.control('email').value)));
+          }
+
+          updateState(false);
+        } else {
+          form.markAllAsTouched();
+        }
       },
     );
+  }
+
+  void updateState(bool state) {
+    setState(() {
+      _makeRequest = state;
+    });
   }
 }

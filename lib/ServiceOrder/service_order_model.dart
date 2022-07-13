@@ -25,16 +25,16 @@ class ServiceOrderModel {
   ServiceOrderModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdAt = json['created_at'];
-    var client_json = json['client'];
+    var clientJson = json['client'];
 
     client = Client(
-        client_json['id'],
-        client_json['name'].toString(),
-        client_json['address'].toString(),
-        client_json['email'].toString(),
-        client_json['lon'].toString(),
-        client_json['lat'].toString(),
-        client_json['active'].toString()
+        clientJson['id'],
+        clientJson['name'].toString(),
+        clientJson['address'].toString(),
+        clientJson['email'].toString(),
+        clientJson['lon'].toString(),
+        clientJson['lat'].toString(),
+        clientJson['active'].toString()
     );
 
     status = _mapToStatus(json['status']);

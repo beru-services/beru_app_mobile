@@ -33,8 +33,8 @@ class _FormLogin extends State<FormLogin> {
   @override
   void initState() {
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
@@ -43,46 +43,54 @@ class _FormLogin extends State<FormLogin> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: ReactiveFormBuilder(
-            form: buildForm,
-            builder: (context, form, child) {
-              return Column(
-                children: [
-                  ReactiveTextField<String>(
-                    formControlName: 'email',
-                    validationMessages: (control) =>
-                    {
-                      ValidationMessage.required: 'The email must not be empty',
-                      ValidationMessage.email:
-                      'The email value must be a valid email',
-                      'unique': 'This email is already in use',
-                      'unique': 'This email is already in use',
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: customInput('Email'),
-                  ),
-                  const SizedBox(height: 40.0),
-                  ReactiveTextField<String>(
-                    formControlName: 'password',
-                    obscureText: true,
-                    validationMessages: (control) =>
-                    {
-                      ValidationMessage.required:
-                      'The password must not be empty',
-                      ValidationMessage.minLength:
-                      'The password must be at least 8 characters',
-                    },
-                    textInputAction: TextInputAction.done,
-                    decoration: customInput('Password'),
-                  ),
-                  const SizedBox(height: 10.0),
-                  _forgotPassword(),
-                  (_makeRequest) ? Loading() : _buttonLogin(form)
-                ],
-              );
-            },
+          child: Column(
+            children: [
+              form(),
+            ],
           ),
         ));
+  }
+
+  Widget form() {
+    return ReactiveFormBuilder(
+      form: buildForm,
+      builder: (context, form, child) {
+        return Column(
+          children: [
+            ReactiveTextField<String>(
+              formControlName: 'email',
+              validationMessages: (control) =>
+              {
+                ValidationMessage.required: 'The email must not be empty',
+                ValidationMessage.email:
+                'The email value must be a valid email',
+                'unique': 'This email is already in use',
+                'unique': 'This email is already in use',
+              },
+              textInputAction: TextInputAction.next,
+              decoration: customInput('Email'),
+            ),
+            const SizedBox(height: 40.0),
+            ReactiveTextField<String>(
+              formControlName: 'password',
+              obscureText: true,
+              validationMessages: (control) =>
+              {
+                ValidationMessage.required:
+                'The password must not be empty',
+                ValidationMessage.minLength:
+                'The password must be at least 8 characters',
+              },
+              textInputAction: TextInputAction.done,
+              decoration: customInput('Password'),
+            ),
+            const SizedBox(height: 10.0),
+            _forgotPassword(),
+            (_makeRequest) ? Loading() : _buttonLogin(form)
+          ],
+        );
+      },
+    );
   }
 
   Widget _forgotPassword() {
@@ -117,11 +125,10 @@ class _FormLogin extends State<FormLogin> {
         try {
           if (await repository.makeLogin(form.value)) {
             Navigator.pushNamed(context, "/list");
+            showToast("Welcome", duration: 5);
           }
 
-          showToast("Welcome", duration: 5);
-
-        } catch(e) {
+        } catch (e) {
           showToast(e.toString(), duration: 5);
         }
 
