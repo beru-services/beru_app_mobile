@@ -24,6 +24,11 @@ abstract class AppHttp {
 
   static getTokenOneSignal() async {
     await dotenv.load(fileName: ".env");
-    return dotenv.env['ONE_SIGNAL'].toString();
+    if(Platform.isAndroid) {
+      return dotenv.env['ONE_SIGNAL_ANDROID'].toString();
+    }
+
+    return dotenv.env['ONE_SIGNAL_IOS'].toString();
+
   }
 }

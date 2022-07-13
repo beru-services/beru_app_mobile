@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:beru_app/utils/app_http.dart';
 import 'package:dio/dio.dart';
@@ -58,21 +59,39 @@ class AuthRepository extends AppHttp {
 
   Future<bool> changePassword(Map<String, dynamic> data) async {
     try {
-      print(data);
       FormData formData = FormData.fromMap(data);
       var url = "${await AppHttp.getUrlApi()}backend/change-password/";
       print(url);
       await http.post(url, data: formData);
       return true;
     } on DioError catch (e) {
-      print('eerrr');
       Map error = jsonDecode(jsonEncode(e.response?.data));
-print(error);
+
       error.forEach((key, value) {
         throw (value);
       });
     }
 
     return false;
+  }
+
+  Future setTokenDevice(String token) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'token_device': token,
+        'type_device': Platform.isAndroid ? 'Android' : 'iOS'
+      });
+
+      var url = "${await AppHttp.getUrlApi()}backend/token-device/";
+
+      await http.post(url, data: formData);
+
+    } on DioError catch (e) {
+      Map error = jsonDecode(jsonEncode(e.response?.data));
+
+      error.forEach((key, value) {
+        throw (value);
+      });
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:beru_app/Auth/auth_repository.dart';
 import 'package:beru_app/ServiceOrder/service_order_repository.dart';
 import 'package:beru_app/ServiceOrder/ui/screens/detail_service_order_screen.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/background_assigned_request.dart';
@@ -20,6 +21,7 @@ class ListAssignedRequestsScreen extends StatefulWidget {
 
 class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
   ServiceOrderRepository repository = ServiceOrderRepository();
+  AuthRepository authRepository = AuthRepository();
 
   @override
   void initState() {
@@ -49,8 +51,18 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
   }
 
   void _handlePromptForPushPermission() {
-    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    OneSignal.shared.promptUserForPushNotificationPermission().then( (accepted) async {
       print("Accepted permission: $accepted");
+
+      var deviceState = await OneSignal.shared.getDeviceState();
+
+      if (deviceState == null || deviceState.userId == null)
+        return;
+
+      var playerId = deviceState.userId!;
+
+      authRepository.setTokenDevice(playerId);
+
     });
   }
 
