@@ -9,12 +9,10 @@ abstract class AppHttp {
   late String api;
 
   getHeader() async {
-    var token = "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}";
-    print(token);
-    return {
-      HttpHeaders.authorizationHeader:
-          "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}"
-    };
+    var token =
+        "Token ${(AppSession.user.userId != null) ? AppSession.user.token : ''}";
+
+    return {HttpHeaders.authorizationHeader: token};
   }
 
   static Future<String> getUrlApi({String apiVersion = 'v1'}) async {
@@ -24,11 +22,10 @@ abstract class AppHttp {
 
   static getTokenOneSignal() async {
     await dotenv.load(fileName: ".env");
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       return dotenv.env['ONE_SIGNAL_ANDROID'].toString();
     }
 
     return dotenv.env['ONE_SIGNAL_IOS'].toString();
-
   }
 }

@@ -82,9 +82,11 @@ class AuthRepository extends AppHttp {
         'type_device': Platform.isAndroid ? 'Android' : 'iOS'
       });
 
+      var header = await getHeader();
+
       var url = "${await AppHttp.getUrlApi()}backend/token-device/";
 
-      await http.post(url, data: formData);
+      await http.post(url, data: formData, options: Options(headers: header));
 
     } on DioError catch (e) {
       Map error = jsonDecode(jsonEncode(e.response?.data));

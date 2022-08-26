@@ -36,12 +36,11 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
                 title: "LIST OF ASSIGNED REQUESTS"),
           ),
           Container(
-              height: 480,
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   _contain(
-                      'SEARCH FOR MERCHANDISE',
+                      'PICKED UP',
                       Icons.location_on_outlined,
                       widget.serviceOrder.status == StatusServiceOrder.A,
                       () => openMapsSheet(context, StatusServiceOrder.S)),
@@ -88,7 +87,7 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
               spreadRadius: 1.0,
             ),
           ],
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
         ),
         child: Row(
@@ -123,8 +122,8 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
       child: Button(
           padding: const EdgeInsets.symmetric(vertical: 20),
           label: "RETURN",
-          onTab: () => Navigator.pop(context)),
-    );
+          onTab: () => Navigator.pushNamed(context, '/list'),
+    ));
   }
 
   openMapsSheet(context, StatusServiceOrder status) async {

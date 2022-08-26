@@ -59,9 +59,7 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
       if (deviceState == null || deviceState.userId == null)
         return;
 
-      var playerId = deviceState.userId!;
-
-      authRepository.setTokenDevice(playerId);
+      authRepository.setTokenDevice(deviceState.userId!);
 
     });
   }
@@ -78,7 +76,6 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
                   title: "LIST OF ASSIGNED REQUESTS"),
             ),
             Container(
-                height: 480,
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
                   // child:_listItems(),

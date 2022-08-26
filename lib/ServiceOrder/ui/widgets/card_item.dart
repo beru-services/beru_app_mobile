@@ -67,7 +67,7 @@ class CardItem extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10, left: 10),
                     child: Text(
-                      serviceOrder.client?.toJson()["name"],
+                      serviceOrder.client?.name ?? "",
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         color: Colors.black,
@@ -83,13 +83,13 @@ class CardItem extends StatelessWidget {
                           color: AppColors.lightGrey,
                         ),
                       )),
-                  const Padding(
-                    padding: EdgeInsets.only(
+                  Padding(
+                    padding: const EdgeInsets.only(
                       bottom: 10,
                       left: 10,
                     ),
                     child: Text(
-                      '30/02/2022',
+                      serviceOrder.createdAt ?? '',
                       textAlign: TextAlign.left,
                     ),
                   )
@@ -128,9 +128,9 @@ class CardItem extends StatelessWidget {
     if (status == StatusServiceOrder.A) {
       return AppColors.yellow;
     } else if (status == StatusServiceOrder.S) {
-      return AppColors.blue;
+      return Colors.orange;
     } else if (status == StatusServiceOrder.T) {
-      return AppColors.lightGreen;
+      return AppColors.lightGrey;
     }
 
     return AppColors.green;

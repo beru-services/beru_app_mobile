@@ -1,5 +1,6 @@
 enum StatusServiceOrder {
-  U,
+  O,
+  R,
   A,
   S,
   T,
@@ -47,14 +48,21 @@ class ServiceOrderModel {
         serviceOrderDetail!.add(ServiceOrderDetail.fromJson(v));
       });
     }
+
+  }
+
+  String getClientName() {
+    return 'ANGEL';
   }
 
   StatusServiceOrder _mapToStatus(String status) {
     switch (status) {
       case "A":
         return StatusServiceOrder.A;
-      case "U":
-        return StatusServiceOrder.U;
+      case "R":
+        return StatusServiceOrder.R;
+      case "O":
+        return StatusServiceOrder.O;
       case "S":
         return StatusServiceOrder.S;
       case "T":
@@ -73,8 +81,11 @@ class ServiceOrderModel {
       case StatusServiceOrder.T:
         statusString = 'T';
         break;
-      case StatusServiceOrder.U:
-        statusString = 'U';
+      case StatusServiceOrder.O:
+        statusString = 'O';
+        break;
+      case StatusServiceOrder.R:
+        statusString = 'R';
         break;
       case StatusServiceOrder.S:
         statusString = 'S';
