@@ -57,9 +57,12 @@ class _Button extends State<Button> {
         ),
         child: Padding(
           padding: widget.padding,
-          child: RaisedButton(
+          child: ElevatedButton(
               onPressed: widget.onTab,
-              color: widget.background,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.background,
+              ),
+              // color: widget.background,
               child: Row(
                 mainAxisAlignment: (widget.icon != null)
                     ? MainAxisAlignment.spaceBetween

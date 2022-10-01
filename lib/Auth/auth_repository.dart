@@ -61,7 +61,7 @@ class AuthRepository extends AppHttp {
     try {
       FormData formData = FormData.fromMap(data);
       var url = "${await AppHttp.getUrlApi()}backend/change-password/";
-      print(url);
+
       await http.post(url, data: formData);
       return true;
     } on DioError catch (e) {
