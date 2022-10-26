@@ -21,6 +21,9 @@ class _FormForgotPassword extends State<FormForgotPassword> {
         'email': FormControl<String>(
           validators: [Validators.required, Validators.email],
         ),
+        'user_type': FormControl<String>(
+          value: 'D'
+        )
       });
 
   @override
