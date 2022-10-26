@@ -1,4 +1,4 @@
-package com.beruservice.beru_app
+package app.beruservices.com
 
 import io.flutter.embedding.android.FlutterActivity
 

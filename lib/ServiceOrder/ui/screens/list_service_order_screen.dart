@@ -38,11 +38,11 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
 
     OneSignal.shared
         .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
-      print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
+      // print("SUBSCRIPTION STATE CHANGED: ${changes.jsonRepresentation()}");
     });
 
     OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
-      print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
+      // print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
     });
 
     await OneSignal.shared.setAppId( await AppHttp.getTokenOneSignal());

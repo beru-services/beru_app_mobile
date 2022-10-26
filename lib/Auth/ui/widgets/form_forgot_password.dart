@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../Widgets/button.dart';
 import '../../../Widgets/custom_input.dart';
+import '../../../Widgets/loading.dart';
 import '../screens/change_password_screen.dart';
 
 class FormForgotPassword extends StatefulWidget {
@@ -49,7 +50,7 @@ class _FormForgotPassword extends State<FormForgotPassword> {
               textInputAction: TextInputAction.next,
               decoration: customInput('Email'),
             ),
-            _buttonForgotPassword(form),
+            (_makeRequest) ? Loading() : _buttonForgotPassword(form),
           ],
         );
       },
