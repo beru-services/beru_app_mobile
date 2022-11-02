@@ -14,6 +14,7 @@ class ServiceOrderModel {
   StatusServiceOrder? status;
   String? statusDescription;
   List<ServiceOrderDetail>? serviceOrderDetail;
+  String? tailNumber;
 
   ServiceOrderModel(
       {this.createdAt,
@@ -41,6 +42,7 @@ class ServiceOrderModel {
     status = _mapToStatus(json['status']);
 
     statusDescription = json['get_status_display'];
+    tailNumber = json['tail_number'];
 
     if (json['fk_service_order'] != null) {
       serviceOrderDetail = <ServiceOrderDetail>[];
@@ -107,6 +109,8 @@ class ServiceOrderModel {
     }
     data['status'] = status;
     data['get_status_display'] = statusDescription;
+    data['tail_number'] = tailNumber;
+
     if (serviceOrderDetail != null) {
       data['fk_service_order'] =
           serviceOrderDetail!.map((v) => v.toJson()).toList();

@@ -55,19 +55,19 @@ class CardItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                      padding: EdgeInsets.only(bottom: 10, left: 10, top: 10),
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 10, left: 10, top: 10),
                       child: Text(
-                        "CUSTOMER NAME",
+                        serviceOrder.client?.name.toUpperCase() ?? "",
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.lightGrey,
                         ),
                       )),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10, left: 10),
                     child: Text(
-                      serviceOrder.client?.name ?? "",
+                      serviceOrder?.tailNumber ?? "",
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         color: Colors.black,

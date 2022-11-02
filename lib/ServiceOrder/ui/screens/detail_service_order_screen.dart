@@ -5,8 +5,10 @@ import 'package:beru_app/ServiceOrder/service_order_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:toast/toast.dart';
 
 import '../../../Widgets/button.dart';
+import '../../../Widgets/loading.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_fonts.dart';
 import '../widgets/background_assigned_request.dart';
@@ -23,6 +25,12 @@ class DetailServiceOrderScreen extends StatefulWidget {
 
 class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
   ServiceOrderRepository repository = ServiceOrderRepository();
+  bool _makeRequest = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +51,7 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
                       'PICKED UP',
                       Icons.location_on_outlined,
                       widget.serviceOrder.status == StatusServiceOrder.A,
-                      () => openMapsSheet(context, StatusServiceOrder.S)),
+                      () => (_makeRequest) ? Loading() : _updateStatus(StatusServiceOrder.S)),
                   _contain(
                       'IN TRANSIT',
                       Icons.delivery_dining_outlined,
@@ -53,7 +61,7 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
                       'DELIVERED',
                       Icons.location_searching_rounded,
                       widget.serviceOrder.status == StatusServiceOrder.T,
-                      () => openMapsSheet(context, StatusServiceOrder.D)),
+                      () => (_makeRequest) ? Loading() : _updateStatus(StatusServiceOrder.D)),
                   _back(),
                 ],
               ))
@@ -118,12 +126,12 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
 
   Widget _back() {
     return Container(
-      margin: const EdgeInsets.only(top: 40),
-      child: Button(
+        margin: const EdgeInsets.only(top: 40),
+        child: Button(
           padding: const EdgeInsets.symmetric(vertical: 20),
           label: "RETURN",
           onTab: () => Navigator.pushNamed(context, '/list'),
-    ));
+        ));
   }
 
   openMapsSheet(context, StatusServiceOrder status) async {
@@ -171,10 +179,23 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
     }
   }
 
+  void updateState(bool state) {
+    setState(() {
+      _makeRequest = state;
+    });
+  }
+
   void _updateStatus(StatusServiceOrder status) async {
     if (widget.serviceOrder.id != null) {
+      updateState(true);
       await repository.setUpdateStatus(widget.serviceOrder.id,
           ServiceOrderModel.statusObjectToString(status));
+      Toast.show('The order has been updated', duration: 5, gravity: Toast.bottom);
+
+      updateState(false);
+
+      Navigator.pushNamed(context, '/list');
+
     }
   }
 }

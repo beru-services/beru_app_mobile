@@ -45,22 +45,22 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
       // print("PERMISSION STATE CHANGED: ${changes.jsonRepresentation()}");
     });
 
-    await OneSignal.shared.setAppId( await AppHttp.getTokenOneSignal());
+    await OneSignal.shared.setAppId(await AppHttp.getTokenOneSignal());
 
     _handlePromptForPushPermission();
   }
 
   void _handlePromptForPushPermission() {
-    OneSignal.shared.promptUserForPushNotificationPermission().then( (accepted) async {
+    OneSignal.shared
+        .promptUserForPushNotificationPermission()
+        .then((accepted) async {
       print("Accepted permission: $accepted");
 
       var deviceState = await OneSignal.shared.getDeviceState();
 
-      if (deviceState == null || deviceState.userId == null)
-        return;
+      if (deviceState == null || deviceState.userId == null) return;
 
       authRepository.setTokenDevice(deviceState.userId!);
-
     });
   }
 
@@ -68,51 +68,57 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(backgroundColor: AppColors.black, toolbarHeight: 0),
-        body: Column(
-          children: [
-            Container(
-              color: AppColors.black,
-              child: const BackgroundAssignedRequest(
-                  title: "LIST OF ASSIGNED REQUESTS"),
-            ),
-            Container(
-                padding: const EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  // child:_listItems(),
-                  child: FutureBuilder(
-                      future: repository.getServiceOrder(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState != ConnectionState.done) {
-                          return Loading();
-                        }
+        body: ListView(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    color: AppColors.black,
+                    child: const BackgroundAssignedRequest(
+                        title: "LIST OF ASSIGNED REQUESTS"),
+                  ),
+                  Container(
+                      padding: const EdgeInsets.all(10),
+                      child: SingleChildScrollView(
+                        // child:_listItems(),
+                        child: FutureBuilder(
+                            future: repository.getServiceOrder(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.done) {
+                                return Loading();
+                              }
 
-                        if (snapshot.data != null) {
-                          List<ServiceOrderModel> listOrders =
-                              snapshot.data as List<ServiceOrderModel>;
+                              if (snapshot.data != null) {
+                                List<ServiceOrderModel> listOrders =
+                                    snapshot.data as List<ServiceOrderModel>;
 
-                          if (listOrders.isNotEmpty) {
-                            return Column(
-                              children: listOrders.map((order) {
-                                return GestureDetector(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailServiceOrderScreen(
-                                                serviceOrder: order,
-                                              ))),
-                                  child: CardItem(serviceOrder: order),
-                                );
-                              }).toList(),
-                            );
-                          }
-                        }
+                                if (listOrders.isNotEmpty) {
+                                  return Column(
+                                    children: listOrders.map((order) {
+                                      return GestureDetector(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailServiceOrderScreen(
+                                                      serviceOrder: order,
+                                                    ))),
+                                        child: CardItem(serviceOrder: order),
+                                      );
+                                    }).toList(),
+                                  );
+                                }
+                              }
 
-                        return _notData();
-                      }),
-                ))
-          ],
-        ));
+                              return _notData();
+                            }),
+                      ))
+                ],
+              )
+            ]));
   }
 
   Widget _notData() {
