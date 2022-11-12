@@ -73,7 +73,7 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
   Widget _contain(
       String title, IconData icon, bool activeState, VoidCallback action) {
     return GestureDetector(
-      onTap: action,
+      onTap: activeState == true ? action: null,
       child: Container(
         margin: const EdgeInsets.only(top: 20),
         padding: const EdgeInsets.all(20),
