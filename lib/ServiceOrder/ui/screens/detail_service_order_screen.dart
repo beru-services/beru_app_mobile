@@ -50,12 +50,12 @@ class _DetailServiceOrderScreen extends State<DetailServiceOrderScreen> {
                   _contain(
                       'PICKED UP',
                       Icons.location_on_outlined,
-                      widget.serviceOrder.status == StatusServiceOrder.A,
+                      widget.serviceOrder.status == StatusServiceOrder.O,
                       () => (_makeRequest) ? Loading() : _updateStatus(StatusServiceOrder.S)),
                   _contain(
                       'IN TRANSIT',
                       Icons.delivery_dining_outlined,
-                      widget.serviceOrder.status == StatusServiceOrder.S,
+                      widget.serviceOrder.status == StatusServiceOrder.R,
                       () => openMapsSheet(context, StatusServiceOrder.T)),
                   _contain(
                       'DELIVERED',

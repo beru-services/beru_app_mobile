@@ -10,6 +10,7 @@ enum StatusServiceOrder {
 class ServiceOrderModel {
   int? id;
   String? createdAt;
+  String? deliveryDate;
   Client? client;
   StatusServiceOrder? status;
   String? statusDescription;
@@ -18,6 +19,7 @@ class ServiceOrderModel {
 
   ServiceOrderModel(
       {this.createdAt,
+      this.deliveryDate,
       this.client,
       this.status,
       this.statusDescription,
@@ -27,6 +29,7 @@ class ServiceOrderModel {
   ServiceOrderModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     createdAt = json['created_at'];
+    deliveryDate = json['delivery_date'];
     var clientJson = json['client'];
 
     client = Client(
@@ -36,8 +39,7 @@ class ServiceOrderModel {
         clientJson['email'].toString(),
         clientJson['lon'].toString(),
         clientJson['lat'].toString(),
-        clientJson['active'].toString()
-    );
+        clientJson['active'].toString());
 
     status = _mapToStatus(json['status']);
 
@@ -50,7 +52,6 @@ class ServiceOrderModel {
         serviceOrderDetail!.add(ServiceOrderDetail.fromJson(v));
       });
     }
-
   }
 
   String getClientName() {
@@ -104,6 +105,7 @@ class ServiceOrderModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['created_at'] = createdAt;
+    data['delivery_date'] = deliveryDate;
     if (client != null) {
       data['client'] = client!.toJson();
     }
@@ -128,7 +130,8 @@ class Client {
   final String lat;
   final String active;
 
-  Client(this.id, this.name, this.address, this.email, this.lon, this.lat, this.active);
+  Client(this.id, this.name, this.address, this.email, this.lon, this.lat,
+      this.active);
 
   // Client.fromJson(Map<String, dynamic> json) {
   //   id = json['id'];

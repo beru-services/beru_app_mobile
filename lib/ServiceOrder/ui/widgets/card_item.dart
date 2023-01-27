@@ -6,8 +6,7 @@ import '../../service_order_model.dart';
 class CardItem extends StatelessWidget {
   final ServiceOrderModel serviceOrder;
 
-  const CardItem({Key? key, required this.serviceOrder})
-      : super(key: key);
+  const CardItem({Key? key, required this.serviceOrder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,8 @@ class CardItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: const EdgeInsets.only(bottom: 10, left: 10, top: 10),
+                      padding:
+                          const EdgeInsets.only(bottom: 10, left: 10, top: 10),
                       child: Text(
                         serviceOrder.client?.name.toUpperCase() ?? "",
                         textAlign: TextAlign.left,
@@ -92,7 +92,26 @@ class CardItem extends StatelessWidget {
                       serviceOrder.createdAt ?? '',
                       textAlign: TextAlign.left,
                     ),
-                  )
+                  ),
+                  const Padding(
+                      padding: EdgeInsets.only(bottom: 10, left: 10),
+                      child: Text(
+                        "DELIVERY ETA",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: AppColors.lightGrey,
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 10,
+                      left: 10,
+                    ),
+                    child: Text(
+                      serviceOrder.deliveryDate ?? '',
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
                 ],
               )),
         ],
@@ -103,7 +122,7 @@ class CardItem extends StatelessWidget {
   Icon _iconStatusOrder(StatusServiceOrder? status) {
     if (status == StatusServiceOrder.A) {
       return const Icon(Icons.info_rounded, color: Colors.white, size: 24.0);
-    } else if (status == StatusServiceOrder.S ) {
+    } else if (status == StatusServiceOrder.S) {
       return const Icon(
         Icons.flag_circle_rounded,
         color: Colors.white,
