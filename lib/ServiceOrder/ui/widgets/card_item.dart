@@ -144,14 +144,21 @@ class CardItem extends StatelessWidget {
   }
 
   _colorStatusOrder(StatusServiceOrder? status) {
-    if (status == StatusServiceOrder.A) {
-      return AppColors.yellow;
-    } else if (status == StatusServiceOrder.S) {
-      return Colors.orange;
-    } else if (status == StatusServiceOrder.T) {
-      return AppColors.lightGrey;
+    switch(status) {
+      case StatusServiceOrder.O:
+        return AppColors.red;
+      case StatusServiceOrder.D:
+        return AppColors.blue;
+      case StatusServiceOrder.T:
+        return AppColors.lightGrey;
+      case StatusServiceOrder.S:
+        return AppColors.orange;
+      case StatusServiceOrder.P:
+        return AppColors.yellow;
+      case StatusServiceOrder.R:
+        return AppColors.green;
+      default:
+        return AppColors.green;
     }
-
-    return AppColors.green;
   }
 }

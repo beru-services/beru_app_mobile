@@ -5,6 +5,7 @@ enum StatusServiceOrder {
   S,
   T,
   D,
+  P
 }
 
 class ServiceOrderModel {
@@ -70,6 +71,8 @@ class ServiceOrderModel {
         return StatusServiceOrder.S;
       case "T":
         return StatusServiceOrder.T;
+      case "P":
+        return StatusServiceOrder.P;
       default:
         return StatusServiceOrder.D;
     }

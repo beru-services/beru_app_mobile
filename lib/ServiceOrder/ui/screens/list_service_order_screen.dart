@@ -3,6 +3,7 @@ import 'package:beru_app/ServiceOrder/service_order_repository.dart';
 import 'package:beru_app/ServiceOrder/ui/screens/detail_service_order_screen.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/background_assigned_request.dart';
 import 'package:beru_app/ServiceOrder/ui/widgets/card_item.dart';
+import 'package:beru_app/Widgets/button.dart';
 import 'package:beru_app/utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -11,6 +12,7 @@ import '../../../Widgets/loading.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_http.dart';
 import '../../service_order_model.dart';
+import '../service_order_result.dart';
 
 class ListAssignedRequestsScreen extends StatefulWidget {
   const ListAssignedRequestsScreen({Key? key}) : super(key: key);
@@ -20,7 +22,12 @@ class ListAssignedRequestsScreen extends StatefulWidget {
 }
 
 class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
-  ServiceOrderRepository repository = ServiceOrderRepository();
+  List<ServiceOrderModel> listOrders = [];
+  String? next;
+  String? prev;
+  int count = 0;
+  String? urlAPI;
+
   AuthRepository authRepository = AuthRepository();
 
   @override
@@ -64,6 +71,17 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
     });
   }
 
+  Future<List<ServiceOrderModel>> _fetchOrders() async {
+    ServiceOrderRepository repository = ServiceOrderRepository();
+    ServiceOrderResult cls = await repository.getServiceOrder(urlAPI);
+
+    next = cls.next;
+    prev = cls.previous;
+    count = cls.count;
+
+    return cls.orders;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +102,7 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
                       child: SingleChildScrollView(
                         // child:_listItems(),
                         child: FutureBuilder(
-                            future: repository.getServiceOrder(),
+                            future: _fetchOrders(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState !=
                                   ConnectionState.done) {
@@ -97,18 +115,64 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
 
                                 if (listOrders.isNotEmpty) {
                                   return Column(
-                                    children: listOrders.map((order) {
-                                      return GestureDetector(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailServiceOrderScreen(
-                                                      serviceOrder: order,
-                                                    ))),
-                                        child: CardItem(serviceOrder: order),
-                                      );
-                                    }).toList(),
+                                    children: [
+                                      _getOrders(listOrders),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 20, bottom: 20),
+                                            child: Text(
+                                                'Total orders: ${count.toString()}',
+                                                style: const TextStyle(
+                                                    fontFamily:
+                                                        AppFonts.fontRegular,
+                                                    fontSize: 16)),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ElevatedButton.icon(
+                                                onPressed: prev == null
+                                                    ? null
+                                                    : () => setState(
+                                                        () => urlAPI = prev),
+                                                icon: const Icon(
+                                                    Icons.arrow_back),
+                                                label: const Text('Prev'),
+                                                style: prev != null
+                                                    ? ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.green)
+                                                    : ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.grey),
+                                              ),
+                                              const SizedBox(width: 20),
+                                              ElevatedButton.icon(
+                                                onPressed: next == null
+                                                    ? null
+                                                    : () => setState(
+                                                        () => urlAPI = next),
+                                                icon: const Icon(
+                                                    Icons.arrow_forward),
+                                                label: const Text('Next'),
+                                                style: next != null
+                                                    ? ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.green)
+                                                    : ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   );
                                 }
                               }
@@ -119,6 +183,21 @@ class _ListAssignedRequestsScreen extends State<ListAssignedRequestsScreen> {
                 ],
               )
             ]));
+  }
+
+  Widget _getOrders(List<ServiceOrderModel> listOrders) {
+    return Column(
+        children: listOrders.map((order) {
+      return GestureDetector(
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailServiceOrderScreen(
+                      serviceOrder: order,
+                    ))),
+        child: CardItem(serviceOrder: order),
+      );
+    }).toList());
   }
 
   Widget _notData() {

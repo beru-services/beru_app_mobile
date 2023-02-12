@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:beru_app/ServiceOrder/service_order_model.dart';
+import 'package:beru_app/ServiceOrder/ui/service_order_result.dart';
 import 'package:beru_app/utils/app_http.dart';
 import 'package:dio/dio.dart';
 
 class ServiceOrderRepository extends AppHttp {
-  Future<List<ServiceOrderModel>> getServiceOrder() async {
+  Future<ServiceOrderResult> getServiceOrder(String? urlAPI) async {
+    print("AQUI");
     Response response;
     try {
       var header = await getHeader();
-      var url = "${await AppHttp.getUrlApi()}process/driver/service-order/";
+      String url = urlAPI ?? "${await AppHttp.getUrlApi()}process/driver/service-order/";
 
       response = await http.get(
           url,
@@ -17,15 +19,20 @@ class ServiceOrderRepository extends AppHttp {
 
       final parsed = response.data['results'].cast<Map<String, dynamic>>();
 
-      return parsed
+      return ServiceOrderResult(parsed
           .map<ServiceOrderModel>((json) => ServiceOrderModel.fromJson(json))
-          .toList();
+          .toList(), response.data['next'],
+          response.data['previous'],
+          response.data['count']
+      );
+
     } on DioError catch (e) {
       Map error = jsonDecode(jsonEncode(e.response?.data));
       error.forEach((key, value) {
         throw (value);
       });
-      return [];
+
+       return ServiceOrderResult([], null, null, 0);
     }
   }
 
